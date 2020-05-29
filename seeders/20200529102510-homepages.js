@@ -12,7 +12,8 @@ module.exports = {
         {
           title: "Alien Fanpage",
           description: "All things related to Alien franchise",
-
+          backgroundColor: "#40A056",
+          color: "#EDEDED",
           createdAt: new Date(),
           updatedAt: new Date(),
           userId: user1.id,
@@ -20,8 +21,8 @@ module.exports = {
         {
           title: "Coding journey",
           description: "My journey to become a softwaredeveloper",
-          backgroundColor: "#40A056",
-          color: "#EDEDED",
+          backgroundColor: "#FF3E00",
+          color: "#000000",
           createdAt: new Date(),
           updatedAt: new Date(),
           userId: user2.id,

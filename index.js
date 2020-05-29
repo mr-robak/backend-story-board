@@ -1,6 +1,10 @@
 const express = require("express");
 const app = express();
 
+const Homepages = require("./models").homepage;
+const Stories = require("./models").story;
+const Users = require("./models").user;
+
 /**
  * Middlewares
  *
@@ -116,18 +120,42 @@ const authMiddleWare = require("./auth/middleware");
  *
  * Define your routes here (now that middlewares are configured)
  */
+app.get("/", async (req, res) => {
+  try {
+    const pages = await Homepages.findAll();
+    res.send(pages);
+  } catch (error) {
+    // console.log("OH NO AN ERROR", error.message);
+    // console.log("WHAT HAPPENED?", error.response.data);
+    res.send(error);
+  }
+});
+
+app.get("/homepages/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const page = await Homepages.findByPk(id, {
+      include: Stories,
+    });
+    res.send(page);
+  } catch (error) {
+    // console.log("OH NO AN ERROR", error.message);
+    // console.log("WHAT HAPPENED?", error.response.data);
+    res.send(error);
+  }
+});
 
 // GET endpoint for testing purposes, can be removed
-app.get("/", (req, res) => {
-  res.send("Hi from express");
-});
+// app.get("/", (req, res) => {
+//   res.send("Hi from express");
+// });
 
 // POST endpoint for testing purposes, can be removed
 app.post("/echo", (req, res) => {
   res.json({
     youPosted: {
-      ...req.body
-    }
+      ...req.body,
+    },
   });
 });
 
@@ -140,11 +168,11 @@ app.post("/authorized_post_request", authMiddleWare, (req, res) => {
 
   res.json({
     youPosted: {
-      ...req.body
+      ...req.body,
     },
     userFoundWithToken: {
-      ...user.dataValues
-    }
+      ...user.dataValues,
+    },
   });
 });
 

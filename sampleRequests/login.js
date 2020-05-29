@@ -5,7 +5,7 @@ async function loginExample() {
   try {
     const response = await axios.post(`http://localhost:${PORT}/login`, {
       email: "test@test.com",
-      password: "test1234"
+      password: "test",
     });
     console.log("RESPONSE FROM SERVER", response.data);
   } catch (error) {

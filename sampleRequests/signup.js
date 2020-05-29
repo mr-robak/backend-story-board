@@ -7,8 +7,8 @@ async function signUpExample() {
       // NOTE: If you run this example more than once
       // you will have to change this email (emails must be unique)
       email: "testwithaxios@test.com",
-      password: "testwithaxios1234",
-      name: "testwithaxios"
+      password: "testwithaxios",
+      name: "testwithaxios",
     });
     console.log("RESPONSE FROM SERVER", response.data);
   } catch (error) {

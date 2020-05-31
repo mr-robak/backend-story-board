@@ -145,10 +145,28 @@ app.get("/homepages/:id", async (req, res) => {
   }
 });
 
-// GET endpoint for testing purposes, can be removed
-// app.get("/", (req, res) => {
-//   res.send("Hi from express");
-// });
+app.patch("/homepages/:id", authMiddleWare, async (req, res) => {
+  try {
+    const homepage = await Homepages.findByPk(req.params.id);
+
+    if (homepage.userId !== req.user.id) {
+      res
+        .status(403)
+        .send({ message: "You are not authorized to update this homepage" });
+    }
+
+    const { title, description, backgroundColor, color } = req.body;
+
+    await homepage.update({ title, description, backgroundColor, color });
+    // console.log(4444444444444, "response", res);
+    return res.status(200).send({ homepage });
+    // return res.status(200);
+  } catch (error) {
+    // console.log("OH NO AN ERROR", error.message);
+    // console.log("WHAT HAPPENED?", error.response.data);
+    res.send(error);
+  }
+});
 
 // POST endpoint for testing purposes, can be removed
 app.post("/echo", (req, res) => {

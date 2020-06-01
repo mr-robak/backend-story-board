@@ -56,12 +56,21 @@ router.post("/signup", async (req, res) => {
       password: bcrypt.hashSync(password, SALT_ROUNDS),
       name,
     });
-
-    delete newUser.dataValues["password"]; // don't send back the password hash
-
+    const newHomepage = await Homepage.create({
+      title: ` ${newUser.name}'s homepage`,
+      description: null,
+      backgroundColor: "#ffffff",
+      color: "#000000",
+      userId: newUser.id,
+    });
     const token = toJWT({ userId: newUser.id });
+    // const userHomepage = User.findByPk(newUser.id, { include: Homepage });
+    const userHomepage = await User.findByPk(newUser.id, { include: Homepage });
 
-    res.status(201).json({ token, ...newUser.dataValues });
+    delete userHomepage.dataValues["password"]; // don't send back the password hash
+    // console.log(111111111, userHomepage.dataValues);
+
+    res.status(201).json({ token, ...userHomepage.dataValues });
   } catch (error) {
     if (error.name === "SequelizeUniqueConstraintError") {
       return res

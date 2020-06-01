@@ -148,19 +148,45 @@ app.get("/homepages/:id", async (req, res) => {
 app.patch("/homepages/:id", authMiddleWare, async (req, res) => {
   try {
     const homepage = await Homepages.findByPk(req.params.id);
-
     if (homepage.userId !== req.user.id) {
       res
         .status(403)
         .send({ message: "You are not authorized to update this homepage" });
     }
-
     const { title, description, backgroundColor, color } = req.body;
-
     await homepage.update({ title, description, backgroundColor, color });
-    // console.log(4444444444444, "response", res);
+    // console.log(44444 , "response", res);
     return res.status(200).send({ homepage });
-    // return res.status(200);
+  } catch (error) {
+    // console.log("OH NO AN ERROR", error.message);
+    // console.log("WHAT HAPPENED?", error.response.data);
+    res.send(error);
+  }
+});
+
+app.post("/homepages/:id", authMiddleWare, async (req, res) => {
+  try {
+    // console.log(1111111111, "response.user", req.user);
+    // accessing user that was added to req by the auth middleware
+    const user = req.user;
+    // don't send back the password hash
+    delete user.dataValues["password"];
+    const homepage = await Homepages.findByPk(req.params.id);
+    const homepageId = homepage.id;
+    if (homepage.userId !== user.id) {
+      res
+        .status(403)
+        .send({ message: "You are not authorized to post on this homepage" });
+    }
+    // console.log(2222222, " req.body at postAStory", req.body);
+    const newStory = await Stories.create({
+      ...req.body,
+      homepageId,
+    });
+    // console.log(333333, "newStory", newStory.dataValues);
+    res.status(200).send({
+      ...newStory.dataValues,
+    });
   } catch (error) {
     // console.log("OH NO AN ERROR", error.message);
     // console.log("WHAT HAPPENED?", error.response.data);
@@ -170,7 +196,7 @@ app.patch("/homepages/:id", authMiddleWare, async (req, res) => {
 
 // POST endpoint for testing purposes, can be removed
 app.post("/echo", (req, res) => {
-  res.json({
+  res.status(200).send({
     youPosted: {
       ...req.body,
     },

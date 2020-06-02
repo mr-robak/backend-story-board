@@ -59,8 +59,8 @@ router.post("/signup", async (req, res) => {
     const newHomepage = await Homepage.create({
       title: ` ${newUser.name}'s homepage`,
       description: null,
-      backgroundColor: "#ffffff",
-      color: "#000000",
+      // backgroundColor: "#ffffff",
+      // color: "#000000",
       userId: newUser.id,
     });
     const token = toJWT({ userId: newUser.id });
@@ -94,7 +94,7 @@ router.get("/me", authMiddleware, async (req, res) => {
     },
   });
 
-  console.log(444444, "user, witth homepage and stories", user.dataValues);
+  // console.log(444444, "user, witth homepage and stories", user.dataValues);
   // don't send back the password hash
   delete user.dataValues["password"];
   res.status(200).send({ ...user.dataValues });
